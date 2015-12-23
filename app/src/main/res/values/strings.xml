@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">C-Color</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="flashlight">Flashlight</string>
+    <string name="core_activity">CoreActivity</string>
+</resources>

@@ -2,4 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/flashlight" android:title="@string/flashlight"
         android:orderInCategory="100" android:showAsAction="always" />
+    <item android:id="@+id/save" android:title="Save to photos" android:orderInCategory="200"
+        android:showAsAction="always"/>
+
 </menu>

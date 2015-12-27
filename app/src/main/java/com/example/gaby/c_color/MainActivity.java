@@ -1,6 +1,7 @@
 package com.example.gaby.c_color;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,8 +9,10 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -88,7 +91,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 
     private void switchActivity(){
-        //Log.w("SwitchActivity", "Im here");
+        Log.w("SwitchActivity", "Im here");
         if(flashlight){
             param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             camera.setParameters(param);
@@ -110,148 +113,148 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         switch(reducedColor){
             case 0: //(0,0,0) 0=32,1=96,2=160,3=224
                 return "Black";
-            case 1: //(1,0,0)
-                return "Brown";
-            case 2: //(2,0,0)
-                return "Red";
-            case 3: //(3,0,0)
-                return "Red";
-            case 4: //(0,1,0)
-                return "Green";
-            case 5: //(1,1,0)
-                return "Yellow";
-            case 6: //(2,1,0)
-                return "orange";
-            case 7: //(3,1,0)
-                return "orange";
+            case 1: //(1,0,0)  (96,32,32)
+                return "Brown";  // Brown
+            case 2: //(2,0,0)  (160,32,32)
+                return "Red"; // RED
+            case 3: //(3,0,0) (224,32,32)
+                return "Red"; // RED
+            case 4: //(0,1,0)  (32,96,32)
+                return "Green"; // GREEN
+            case 5: //(1,1,0) (96,96,32)
+                return "Yellow"; // YELLOW
+            case 6: //(2,1,0)  (160,96,32)
+                return "Brown"; // BROWN
+            case 7: //(3,1,0) (224,96,32)
+                return "Orange"; // ORANGE
             case 8: //(0,2,0)
-                return "green";
+                return "Green"; // GREEN
             case 9: //(1,2,0)
-                return "green";
+                return "Green"; //GREEN
             case 10: //(2,2,0)
-                return "yellow";
+                return "Yellow"; // YELLOW
             case 11: //(3,2,0)
-                return "orange";
+                return "Brown"; // BROWN
             case 12: //(0,3,0)
-                return "green";
+                return "Green"; //GREEN
             case 13: //(1,3,0)
-                return "green";
+                return "Green"; //GREEN
             case 14: //(2,3,0)
-                return "green";
+                return "Green"; //GREEN
             case 15: //(3,3,0)
-                return "yellow";
+                return "Yellow"; //YELLOW
             case 16: //(0,0,1)
       //          Log.w("Switch:", "Im at 16");
-                return "blue";
+                return "Blue"; //BLUE
             case 17: //(1,0,1)
-                return "purple";
+                return "Purple"; //PURPLE
             case 18: //(2,0,1)
-                return "purple";
+                return "Purple"; //PURPLE
             case 19: //(3,0,1)
-                return "red";
+                return "Purple";  //PURPLE
             case 20: //(0,1,1)
-                return "blue";
+                return "Blue"; //BLUE
             case 21: //(1,1,1)
-                return "gray";
+                return "Gray"; //GRAY
             case 22: //(2,1,1)
-                return "red";
+                return "Brown"; //BROWN
             case 23: //(3,1,1)
-                return "red";
+                return "Brown"; // BROWN
             case 24: //(0,2,1)
-                return "green";
+                return "Green"; //GREEN
             case 25: //(1,2,1)
-                return "green";
+                return "Green"; //GREEN
             case 26: //(2,2,1)
-                return "yellow";
+                return "Green"; //Green
             case 27: //(3,2,1)
-                return "orange";
+                return "Brown"; //Brown
             case 28: //(0,3,1)
-                return "green";
+                return "Green";  //GREEN
             case 29: //(1,3,1)
-                return "green";
+                return "Green"; //GREEN
             case 30: //(2,3,1)
-                return "yellow";
+                return "Green"; //GREEN
             case 31: //(3,3,1)
-                return "yellow";
+                return "Yellow"; //Yellow
             case 32: //(0,0,2)
-       //         Log.w("Switch:", "Im at 32");
-                return "blue";
+       //       Log.w("Switch:", "Im at 32");
+                return "Blue"; //Blue
             case 33: //(1,0,2)
-                return "purple";
+                return "Purple"; //Purple
             case 34: //(2,0,2)
-                return "purple";
+                return "Purple"; //Purple
             case 35: //(3,0,2)
-                return "pink";
+                return "Pink"; //Pink
             case 36: //(0,1,2)
        //         Log.w("Switch:", "Im at 36");
-                return "blue";
+                return "Blue"; //BLUE
             case 37: //(1,1,2)
        //         Log.w("Switch:", "Im at 37");
-                return "blue";
+                return "Blue"; //BLUE
             case 38: //(2,1,2)
-                return "purple";
+                return "Purple"; //PURPLE
             case 39: //(3,1,2)
-                return "pink";
+                return "Pink"; //PINK
             case 40: //(0,2,2)
        //         Log.w("Switch:", "Im at 40");
-                return "blue";
+                return "Green"; //GREEN
             case 41: //(1,2,2)
         //        Log.w("Switch:", "Im at 41");
-                return "blue";
+                return "Green"; //GREEN
             case 42: //(2,2,2)
-                return "gray";
+                return "Gray"; //GRAY
             case 43: //(3,2,2)
-                return "pink";
+                return "Pink"; //PINK
             case 44: //(0,3,2)
-                return "green";
+                return "Green"; //GREEN
             case 45: //(1,3,2)
-                return "green";
+                return "Green"; //GREEN
             case 46: //(2,3,2)
-                return "green";
+                return "Green"; //GREEN
             case 47: //(3,3,2)
-                return "yellow";
+                return "Yellow"; //YELLOW
             case 48: //(0,0,3)
         //        Log.w("Switch:", "Im at 48");
-                return "blue";
+                return "Blue"; // BLUE
             case 49: //(1,0,3)
          //       Log.w("Switch:", "Im at 49");
-                return "blue";
+                return "Blue"; //BLUE
             case 50: //(2,0,3)
-                return "purple";
+                return "Purple"; //PURPLE
             case 51: //(3,0,3)
-                return "pink";
+                return "Pink"; //PINK
             case 52: //(0,1,3)
          //       Log.w("Switch:", "Im at 52");
-                return "blue";
+                return "Blue"; //BLUE
             case 53: //(1,1,3)
          //       Log.w("Switch:", "Im at 53");
-                return "blue";
+                return "Blue"; //BLUE
             case 54: //(2,1,3)
-                return "purple";
+                return "Purple"; //PURPLE
             case 55: //(3,1,3)
-                return "pink";
+                return "Pink"; //PINK
             case 56: //(0,2,3)
          //       Log.w("Switch:", "Im at 56");
-                return "blue";
+                return "Blue"; //BLUE
             case 57: //(1,2,3)
         //        Log.w("Switch:", "Im at 57");
-                return "blue";
+                return "Blue"; //BLUE
             case 58: //(2,2,3)
         //        Log.w("Switch:", "Im at 58");
-                return "blue";
+                return "Purple"; //PURPLE
             case 59: //(3,2,3)
-                return "pink";
+                return "Pink"; //PINK
             case 60: //(0,3,3)
          //       Log.w("Switch:", "Im at 60");
-                return "blue";
+                return "Green"; //GREEN
             case 61: //(1,3,3)
          //       Log.w("Switch:", "Im at 61");
-                return "blue";
+                return "Green"; //GREEN
             case 62: //(2,3,3)
           //      Log.w("Switch:", "Im at 62");
-                return "blue";
+                return "Gray"; // GRAY
             case 63: //(3,3,3)
-                return "White";
+                return "Gray"; //GRAY
             default:
                 return "Unidentifiable color";
         }
@@ -615,6 +618,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.save).setVisible(false);
+
         return true;
     }
 
@@ -623,11 +628,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+
         int id = item.getItemId();
         Context context = getApplicationContext();
         CharSequence text = "Flashlight on";
         int duration = Toast.LENGTH_SHORT;
-
         Toast toast = Toast.makeText(context, text, duration);
 
         //noinspection SimplifiableIfStatement
@@ -643,6 +649,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 flashLightOff();
             }
         }
+
 
         return super.onOptionsItemSelected(item);
     }

@@ -1,16 +1,18 @@
 package com.example.gaby.c_color;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.media.Image;
-import android.opengl.Matrix;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +28,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.widget.ZoomControls;
 import java.util.ArrayList;
 
 
@@ -40,16 +44,18 @@ public class CoreActivity extends Activity{
     int previewWidth;
     int previewHeight;
     String color;
-   // RadioGroup radioGroup;
+    Bitmap bitmap;
+    // RadioGroup radioGroup;
     //RadioButton radio;
 
     CheckBox red,green,blue, brown, yellow, purple, pink, orange;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.core_image);
         imageView = (ImageView) findViewById(R.id.imageView);
+        Log.w("activity", "im in core");
+
         back = (Button) findViewById(R.id.back);
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
@@ -81,7 +87,7 @@ public class CoreActivity extends Activity{
 //        Log.w("Preview", "width:" + previewWidth + "\npreviewHeight: " + previewHeight + "\nrgb:" + rgb + "\nrgbInt: " + rgbInt);
 
 
-        Bitmap bitmap = Bitmap.createBitmap(rgbInt, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(rgbInt, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
         //should be a black photo.
         Drawable d = new BitmapDrawable(getResources(), bitmap);
 
@@ -113,7 +119,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int) rgb[i])) | 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -130,12 +136,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int) rgb[i])) | 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -157,7 +162,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -173,12 +178,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    //TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -199,7 +203,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -216,12 +220,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -243,7 +246,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -260,12 +263,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -287,7 +289,7 @@ public class CoreActivity extends Activity{
                         }
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -305,12 +307,11 @@ public class CoreActivity extends Activity{
 
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -331,7 +332,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -348,12 +349,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -374,7 +374,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -391,12 +391,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -417,7 +416,7 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
@@ -434,12 +433,11 @@ public class CoreActivity extends Activity{
                             nRGB[i] = ((((int)rgb[i]))| 0xff000000);
 
                     }
-                    Bitmap bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
                     Drawable d = new BitmapDrawable(getResources(), bitmap);
                     imageView.setBackground(d);
                     imageView.setRotation(90);
                     imageView.setVisibility(View.VISIBLE);
-                    // TODO: Revert Image or notify the user they need to click all their boxes again
 
                 }
             }
@@ -590,21 +588,21 @@ public class CoreActivity extends Activity{
     private String boxesChecked(){
         String boxes = "";
         if(red.isChecked())
-            boxes += "Red";
+            boxes += "Red ";
         if(blue.isChecked())
-            boxes += "Blue";
+            boxes += "Blue ";
         if(brown.isChecked())
-            boxes += "Brown";
+            boxes += "Brown ";
         if(yellow.isChecked())
-            boxes += "Yellow";
+            boxes += "Yellow ";
         if(purple.isChecked())
-            boxes += "Purple";
+            boxes += "Purple ";
         if(pink.isChecked())
-            boxes += "Pink";
+            boxes += "Pink ";
         if(orange.isChecked())
-            boxes += "Orange";
+            boxes += "Orange ";
         if(green.isChecked())
-            boxes += "Green";
+            boxes += "Green ";
         return boxes;
     }
 
@@ -613,157 +611,155 @@ public class CoreActivity extends Activity{
         int rBlue = getBlue(midColor)/64;
         int rGreen = getGreen(midColor)/64 ;
         int reducedColor = ((rRed) + (rGreen*4) + (rBlue*16));
-        switch(reducedColor){                                        // 19 BLUES------5 REDS--------13 GREENS-----7 YELLOWS----4 ORANGES
+        switch(reducedColor){
             case 0: //(0,0,0) 0=32,1=96,2=160,3=224
                 return "Black";
-            case 1: //(1,0,0)
-                return "Brown";
-            case 2: //(2,0,0)
-                return "Red";
-            case 3: //(3,0,0)
-                return "Red";
-            case 4: //(0,1,0)
-                return "Green";
-            case 5: //(1,1,0)
-                return "Yellow";
-            case 6: //(2,1,0)
-                return "Orange";
-            case 7: //(3,1,0)
-                return "Orange";
+            case 1: //(1,0,0)  (96,32,32)
+                return "Brown";  // Brown
+            case 2: //(2,0,0)  (160,32,32)
+                return "Red"; // RED
+            case 3: //(3,0,0) (224,32,32)
+                return "Red"; // RED
+            case 4: //(0,1,0)  (32,96,32)
+                return "Green"; // GREEN
+            case 5: //(1,1,0) (96,96,32)
+                return "Yellow"; // YELLOW
+            case 6: //(2,1,0)  (160,96,32)
+                return "Brown"; // BROWN
+            case 7: //(3,1,0) (224,96,32)
+                return "Orange"; // ORANGE
             case 8: //(0,2,0)
-                return "Green";
+                return "Green"; // GREEN
             case 9: //(1,2,0)
-                return "Green";
+                return "Green"; //GREEN
             case 10: //(2,2,0)
-                return "Yellow";
+                return "Yellow"; // YELLOW
             case 11: //(3,2,0)
-                return "Orange";
+                return "Brown"; // BROWN
             case 12: //(0,3,0)
-                return "Green";
+                return "Green"; //GREEN
             case 13: //(1,3,0)
-                return "Green";
+                return "Green"; //GREEN
             case 14: //(2,3,0)
-                return "Green";
+                return "Green"; //GREEN
             case 15: //(3,3,0)
-                return "Yellow";
+                return "Yellow"; //YELLOW
             case 16: //(0,0,1)
-                Log.w("Switch:", "Im at 16");
-                return "Blue";
+                // Log.w("Switch:", "Im at 16");
+                return "Blue"; //BLUE
             case 17: //(1,0,1)
-                return "Purple";
+                return "Purple"; //PURPLE
             case 18: //(2,0,1)
-                return "Purple";
+                return "Purple"; //PURPLE
             case 19: //(3,0,1)
-                return "Red";
+                return "Purple";  //PURPLE
             case 20: //(0,1,1)
-                Log.w("Switch:", "Im at 20");
-                return "Blue";
+                return "Blue"; //BLUE
             case 21: //(1,1,1)
-                return "Gray";
+                return "Gray"; //GRAY
             case 22: //(2,1,1)
-                return "Red";
+                return "Brown"; //BROWN
             case 23: //(3,1,1)
-                return "Red";
+                return "Brown"; // BROWN
             case 24: //(0,2,1)
-                return "Green";
+                return "Green"; //GREEN
             case 25: //(1,2,1)
-                return "Green";
+                return "Green"; //GREEN
             case 26: //(2,2,1)
-                return "Yellow";
+                return "Green"; //Green
             case 27: //(3,2,1)
-                return "Orange";
+                return "Brown"; //Brown
             case 28: //(0,3,1)
-                return "Green";
+                return "Green";  //GREEN
             case 29: //(1,3,1)
-                return "Green";
+                return "Green"; //GREEN
             case 30: //(2,3,1)
-                return "Yellow";
+                return "Green"; //GREEN
             case 31: //(3,3,1)
-                return "Yellow";
+                return "Yellow"; //Yellow
             case 32: //(0,0,2)
-                Log.w("Switch:", "Im at 32");
-                return "Blue";
+                // Log.w("Switch:", "Im at 32");
+                return "Blue"; //Blue
             case 33: //(1,0,2)
-                return "Purple";
+                return "Purple"; //Purple
             case 34: //(2,0,2)
-                return "Purple";
+                return "Purple"; //Purple
             case 35: //(3,0,2)
-                return "Pink";
+                return "Pink"; //Pink
             case 36: //(0,1,2)
-                Log.w("Switch:", "Im at 36");
-                return "Blue";
+                // Log.w("Switch:", "Im at 36");
+                return "Blue"; //BLUE
             case 37: //(1,1,2)
-                Log.w("Switch:", "Im at 37");
-                return "Blue";
+                // Log.w("Switch:", "Im at 37");
+                return "Blue"; //BLUE
             case 38: //(2,1,2)
-                return "Purple";
+                return "Purple"; //PURPLE
             case 39: //(3,1,2)
-                return "Pink";
+                return "Pink"; //PINK
             case 40: //(0,2,2)
-                Log.w("Switch:", "Im at 40");
-                return "Blue";
+                // Log.w("Switch:", "Im at 40");
+                return "Green"; //GREEN
             case 41: //(1,2,2)
-                Log.w("Switch:", "Im at 41");
-                return "Blue";
+                // Log.w("Switch:", "Im at 41");
+                return "Green"; //GREEN
             case 42: //(2,2,2)
-                return "Gray";
+                return "Gray"; //GRAY
             case 43: //(3,2,2)
-                return "Pink";
+                return "Pink"; //PINK
             case 44: //(0,3,2)
-                return "Green";
+                return "Green"; //GREEN
             case 45: //(1,3,2)
-                return "Green";
+                return "Green"; //GREEN
             case 46: //(2,3,2)
-                return "Green";
+                return "Green"; //GREEN
             case 47: //(3,3,2)
-                return "Yellow";
+                return "Yellow"; //YELLOW
             case 48: //(0,0,3)
-                Log.w("Switch:", "Im at 48");
-                return "Blue";
+                // Log.w("Switch:", "Im at 48");
+                return "Blue"; // BLUE
             case 49: //(1,0,3)
-                Log.w("Switch:", "Im at 49");
-                return "Blue";
+                //Log.w("Switch:", "Im at 49");
+                return "Blue"; //BLUE
             case 50: //(2,0,3)
-                return "Purple";
+                return "Purple"; //PURPLE
             case 51: //(3,0,3)
-                return "Pink";
+                return "Pink"; //PINK
             case 52: //(0,1,3)
-                Log.w("Switch:", "Im at 52");
-                return "Blue";
+                //Log.w("Switch:", "Im at 52");
+                return "Blue"; //BLUE
             case 53: //(1,1,3)
-                Log.w("Switch:", "Im at 53");
-                return "Blue";
+                //Log.w("Switch:", "Im at 53");
+                return "Blue"; //BLUE
             case 54: //(2,1,3)
-                return "Purple";
+                return "Purple"; //PURPLE
             case 55: //(3,1,3)
-                return "Pink";
+                return "Pink"; //PINK
             case 56: //(0,2,3)
-                Log.w("Switch:", "Im at 56");
-                return "Blue";
+                //Log.w("Switch:", "Im at 56");
+                return "Blue"; //BLUE
             case 57: //(1,2,3)
-                Log.w("Switch:", "Im at 57");
-                return "Blue";
+                //Log.w("Switch:", "Im at 57");
+                return "Blue"; //BLUE
             case 58: //(2,2,3)
-                Log.w("Switch:", "Im at 58");
-                return "Blue";
+                //Log.w("Switch:", "Im at 58");
+                return "Purple"; //PURPLE
             case 59: //(3,2,3)
-                return "Pink";
+                return "Pink"; //PINK
             case 60: //(0,3,3)
-                Log.w("Switch:", "Im at 60");
-                return "Blue";
+                //Log.w("Switch:", "Im at 60");
+                return "Green"; //GREEN
             case 61: //(1,3,3)
-                Log.w("Switch:", "Im at 61");
-                return "Blue";
+                //Log.w("Switch:", "Im at 61");
+                return "Green"; //GREEN
             case 62: //(2,3,3)
-                Log.w("Switch:", "Im at 62");
-                return "Blue";
+                //Log.w("Switch:", "Im at 62");
+                return "Gray"; // GRAY
             case 63: //(3,3,3)
-                return "White";
+                return "Gray"; //GRAY
             default:
                 return "Unidentifiable color";
         }
     }
-
 
     public int getRed(long color){
         int red = (int) (((color & 0xFF0000) >>16) & 0xFF);
@@ -815,22 +811,43 @@ public class CoreActivity extends Activity{
 
     }
 
+    private Bitmap rotateBitmap(){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(),  bitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
+    }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.flashlight).setVisible(false);
+
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
+        Context context = getApplicationContext();
+        CharSequence text = "The image was saved in your photos";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+
+        if(id == R.id.save){
+            bitmap = rotateBitmap();
+            MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "C-Color image" , "Saved image");
+            toast.show();
+        }
         /*//noinspection SimplifiableIfStatement
         if (id == R.id.flashlight) {
 

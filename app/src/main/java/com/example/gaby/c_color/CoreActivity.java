@@ -41,6 +41,7 @@ public class CoreActivity extends Activity{
     TextView label;
     long[] rgb;
     int[] rgbInt;
+    String [] colors;
     int previewWidth;
     int previewHeight;
     String color;
@@ -59,6 +60,7 @@ public class CoreActivity extends Activity{
         back = (Button) findViewById(R.id.back);
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
+        colors = getIntent().getStringArrayExtra("arrayOfColors");
      //   radioGroup = (RadioGroup) findViewById(R.id.colorRadio);
 
        // String txt = getIntent().getStringExtra("label");
@@ -611,7 +613,15 @@ public class CoreActivity extends Activity{
         int rBlue = getBlue(midColor)/64;
         int rGreen = getGreen(midColor)/64 ;
         int reducedColor = ((rRed) + (rGreen*4) + (rBlue*16));
-        switch(reducedColor){
+
+        if((getGreen(midColor) + getBlue(midColor) + getRed(midColor) )== 765)
+            return "White";
+        for(int i = 0; i<colors.length; i++){
+            if(reducedColor == i)
+                return colors[i];
+        }
+        return "Color not recognized";
+      /*  switch(reducedColor){
             case 0: //(0,0,0) 0=32,1=96,2=160,3=224
                 return "Black";
             case 1: //(1,0,0)  (96,32,32)
@@ -759,6 +769,7 @@ public class CoreActivity extends Activity{
             default:
                 return "Unidentifiable color";
         }
+        */
     }
 
     public int getRed(long color){

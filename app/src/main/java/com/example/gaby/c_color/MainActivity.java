@@ -32,10 +32,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     Camera.Parameters param;
     TextView label;
     String color;
-    final int MAX_AVERAGE = 10;
     final String LABEL_TXT = "Color: ";
-    final int MIN_YELLOW = 10;
-    long [] average = new long[MAX_AVERAGE];
+ //   final int MIN_YELLOW = 10;
+    String [] colors = {/*0*/"Black",/*1*/"Brown",/*2*/"Red",/*3*/"Red",/*4*/"Green",/*5*/"Yellow",/*6*/"Brown",/*7*/"Orange",
+                        /*8*/"Green",/*9*/"Green",/*10*/"Yellow",/*11*/"Brown",/*12*/"Green",/*13*/"Green",/*14*/"Green",/*15*/"Yellow",
+                        /*16*/"Blue",/*17*/"Purple",/*18*/"Purple",/*19*/"Purple",/*20*/"Blue",/*21*/"Gray",/*22*/"Brown",/*23*/"Brown",
+                        /*24*/"Green",/*25*/"Green",/*26*/"Green",/*27*/"Brown",/*28*/"Green",/*29*/"Green",/*30*/"Green",/*31*/"Yellow",
+                        /*32*/"Blue",/*33*/"Purple",/*34*/"Purple",/*35*/"Pink",/*36*/"Blue",/*37*/"Blue",/*38*/"Purple",/*39*/"Pink",
+                        /*40*/"Green",/*41*/"Green",/*42*/"Gray",/*43*/"Pink",/*44*/"Green",/*45*/"Green",/*46*/"Green",/*47*/"Yellow",
+                        /*48*/"Blue",/*49*/"Blue",/*50*/ "Purple",/*51*/"Pink",/*52*/"Blue",/*53*/"Blue",/*54*/"Purple",/*55*/"Pink",
+                        /*56*/"Blue",/*57*/"Blue",/*58*/"Purple",/*59*/"Pink",/*60*/"Green",/*61*/"Green",/*62*/"Gray",/*63*/"Gray" };
     int currIndex = 0;
     int count= 1;
     // number of pixels//transforms NV21 pixel data into RGB pixels
@@ -101,16 +107,26 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         intent.putExtra("Width",camera.getParameters().getPreviewSize().width);
         intent.putExtra("Height",camera.getParameters().getPreviewSize().height);
         intent.putExtra("label", color);
+        intent.putExtra("arrayOfColors", colors);
         startActivity(intent);
 
     }
 
-    public String getColor(){
-        int rRed = getRed(midColor)/64;
-        int rBlue = getBlue(midColor)/64;
-        int rGreen = getGreen(midColor)/64 ;
-        int reducedColor = ((rRed) + (rGreen*4) + (rBlue*16));
-        switch(reducedColor){
+    public String getColor() {
+        int rRed = getRed(midColor) / 64;
+        int rBlue = getBlue(midColor) / 64;
+        int rGreen = getGreen(midColor) / 64;
+        int reducedColor = ((rRed) + (rGreen * 4) + (rBlue * 16));
+        if ((getRed(midColor) + getBlue(midColor) + getGreen(midColor)) == 765)
+            return "White";
+        for (int i = 0; i < colors.length; i++) {
+            if (i == reducedColor)
+                return colors[i];
+        }
+        return "Not recognizable";
+    }
+
+     /*   switch(reducedColor){
             case 0: //(0,0,0) 0=32,1=96,2=160,3=224
                 return "Black";
             case 1: //(1,0,0)  (96,32,32)
@@ -257,8 +273,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 return "Gray"; //GRAY
             default:
                 return "Unidentifiable color";
-        }
-    }
+        }*/
+
     /*switch(reducedColor){
                 case 0:
                     color = "Black";

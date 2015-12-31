@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     Button image;
     boolean recording = false;
     boolean flashlight = false;
+    boolean landscape = false;
     Camera.PictureCallback rawCallback;
     Camera.ShutterCallback shutterCallback;
     Camera.PictureCallback jpegCallback;
@@ -508,6 +510,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         param = camera.getParameters();
         param.setPreviewFormat(ImageFormat.NV21);
         camera.setDisplayOrientation(90);
+        if(landscape)
+            camera.setDisplayOrientation(0);
         // Log.i("Camera", "camera is displayed properly.");
         // modify parameter
         param.setPreviewSize(352, 288);
@@ -590,7 +594,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         if(flashlight){
             flashLightOff();
         }
-        camera.setParameters(param);
         try
         {
             // release the camera immediately on pause event
@@ -627,7 +630,34 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 
 
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        landscape = true;
+     //   Log.w("orientation", "I am at onConfigurationChanged");
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      //      Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+      //      Log.w("orientation","Im inside the if landscape");
+            param.setRotation(0);
+            camera.setParameters(param);
+            camera.setDisplayOrientation(0);
+            if(flashlight)
+                flashLightOn();
+            else
+                flashLightOff();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+      //      Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+      //      Log.w("orientation", "Im inside the if landscape");
+            param.setRotation(90);
+            camera.setParameters(param);
+            camera.setDisplayOrientation(90);
+            if(flashlight)
+                flashLightOn();
+            else
+                flashLightOff();
+        }
+    }
 
 
     @Override

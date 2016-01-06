@@ -815,18 +815,16 @@ public class CoreActivity extends Activity{
     }
 
     public int getRed(long color){
-        int red = (int) (((color & 0xFF0000) >>16) & 0xFF);
-        return red;
+        return ((int) (((color & 0xFF0000) >>16) & 0xFF));
+
     }
     //return 0-255
     public int getGreen(long color){
-        int green = (int) (((color & 0xFF00) >> 8) & 0xFF);
-        return green;
+        return  ((int) (((color & 0xFF00) >> 8) & 0xFF));
     }
     //return 0-255
     public int getBlue(long color){
-        int blue = (int) (color & 0xFF);
-        return blue;
+        return ((int) (color & 0xFF));
     }
 
 

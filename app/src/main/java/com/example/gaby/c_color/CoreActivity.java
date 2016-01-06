@@ -49,7 +49,7 @@ public class CoreActivity extends Activity{
     // RadioGroup radioGroup;
     //RadioButton radio;
 
-    CheckBox red,green,blue, brown, yellow, purple, pink, orange;
+    CheckBox gray,red,green,blue, brown, yellow, purple, pink, orange;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +73,7 @@ public class CoreActivity extends Activity{
         pink = (CheckBox) findViewById(R.id.Pink);
         orange = (CheckBox) findViewById(R.id.Orange);
         green = (CheckBox) findViewById(R.id.Green);
-
+        gray = (CheckBox) findViewById(R.id.gray);
 
         rgb = getIntent().getLongArrayExtra("rgb");
         previewHeight = getIntent().getIntExtra("Height", 375);
@@ -106,6 +106,48 @@ public class CoreActivity extends Activity{
             }
         });
 
+
+        gray.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String colors2Change = boxesChecked();
+                if (isChecked) {
+                    Log.w("Checked", "Gray is checked");
+                    Log.w("Checked", "Changing colors");
+                    int[] nRGB = new int[rgb.length];
+                    for (int i = 0; i < rgb.length; i++) {
+                        if (colors2Change.contains(getColor((int) rgb[i])))
+                            nRGB[i] = Color.BLACK;
+                        else
+                            nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                    }
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                    Drawable d = new BitmapDrawable(getResources(), bitmap);
+                    imageView.setBackground(d);
+                    imageView.setRotation(90);
+                    imageView.setVisibility(View.VISIBLE);
+
+                } else {
+                    colors2Change = boxesChecked();
+                    Log.w("checkedBoxes", colors2Change);
+                    int[] nRGB = new int[rgb.length];
+                    for (int i = 0; i < rgb.length; i++) {
+                        if (colors2Change.contains(getColor((int) rgb[i])))
+                            nRGB[i] = Color.BLACK;
+                        else
+                            nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                    }
+                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                    Drawable d = new BitmapDrawable(getResources(), bitmap);
+                    imageView.setBackground(d);
+                    imageView.setRotation(90);
+                    imageView.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
         red.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

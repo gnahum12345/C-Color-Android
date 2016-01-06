@@ -108,6 +108,15 @@
         android:layout_alignBottom="@+id/Orange"
         android:layout_centerHorizontal="true" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gray"
+        android:id="@+id/gray"
+        android:checked="false"
+        android:layout_below="@+id/imageView"
+        android:layout_toEndOf="@+id/Purple" />
+
     <!--
     <RadioGroup
         android:layout_width="match_parent"

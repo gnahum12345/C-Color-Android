@@ -34,7 +34,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     TextView label;
     String color;
     final String LABEL_TXT = "Color: ";
- //   final int MIN_YELLOW = 10;
     String [] colors = {/*0*/"Black",/*1*/"Brown",/*2*/"Red",/*3*/"Red",/*4*/"Green",/*5*/"Yellow",/*6*/"Brown",/*7*/"Orange",
                         /*8*/"Green",/*9*/"Green",/*10*/"Yellow",/*11*/"Brown",/*12*/"Green",/*13*/"Green",/*14*/"Green",/*15*/"Yellow",
                         /*16*/"Blue",/*17*/"Purple",/*18*/"Purple",/*19*/"Purple",/*20*/"Blue",/*21*/"Gray",/*22*/"Brown",/*23*/"Brown",
@@ -43,8 +42,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                         /*40*/"Green",/*41*/"Green",/*42*/"Gray",/*43*/"Pink",/*44*/"Green",/*45*/"Green",/*46*/"Green",/*47*/"Yellow",
                         /*48*/"Blue",/*49*/"Blue",/*50*/ "Purple",/*51*/"Pink",/*52*/"Blue",/*53*/"Blue",/*54*/"Purple",/*55*/"Pink",
                         /*56*/"Blue",/*57*/"Blue",/*58*/"Purple",/*59*/"Pink",/*60*/"Green",/*61*/"Green",/*62*/"Gray",/*63*/"Gray" };
-    int currIndex = 0;
-    int count= 1;
+
     // number of pixels//transforms NV21 pixel data into RGB pixels
     long [] rgb;
     long midColor;
@@ -52,7 +50,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     SurfaceHolder surfaceHolder;
     Button sliders;
     Button image;
-    boolean recording = false;
     boolean flashlight = false;
     boolean landscape = false;
     Camera.PictureCallback rawCallback;

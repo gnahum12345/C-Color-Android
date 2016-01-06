@@ -5,33 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ImageFormat;
+
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ScaleGestureDetector;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-import android.widget.ZoomControls;
-import java.util.ArrayList;
 
 
 
@@ -837,16 +826,7 @@ public class CoreActivity extends Activity{
     protected void onPause() {
         super.onPause();
     //    param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        try
-        {
-            // release the camera immediately on pause event
-            //releaseCamera();
 
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -866,8 +846,8 @@ public class CoreActivity extends Activity{
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
 
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(),  bitmap.getHeight(), matrix, true);
-        return rotatedBitmap;
+        return (Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(),  bitmap.getHeight(), matrix, true));
+
     }
 
 

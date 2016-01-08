@@ -21,12 +21,12 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.ToggleButton;
 
 
 public class CoreActivity extends Activity{
     ImageView imageView;
-    Button back;
+   // Button back;
     TextView label;
     long[] rgb;
     int[] rgbInt;
@@ -35,6 +35,9 @@ public class CoreActivity extends Activity{
     int previewHeight;
     String color;
     Bitmap bitmap;
+    ToggleButton toggleButton;
+    boolean checked = false;
+
     // RadioGroup radioGroup;
     //RadioButton radio;
 
@@ -45,8 +48,9 @@ public class CoreActivity extends Activity{
         setContentView(R.layout.core_image);
         imageView = (ImageView) findViewById(R.id.imageView);
         Log.w("activity", "im in core");
-
-        back = (Button) findViewById(R.id.back);
+        toggleButton = (ToggleButton) findViewById(R.id.BorW);
+        toggleButton.setText("Black");
+        //back = (Button) findViewById(R.id.back);
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
         colors = getIntent().getStringArrayExtra("arrayOfColors");
@@ -63,7 +67,6 @@ public class CoreActivity extends Activity{
         orange = (CheckBox) findViewById(R.id.Orange);
         green = (CheckBox) findViewById(R.id.Green);
         gray = (CheckBox) findViewById(R.id.gray);
-
         rgb = getIntent().getLongArrayExtra("rgb");
         previewHeight = getIntent().getIntExtra("Height", 375);
         previewWidth = getIntent().getIntExtra("Width", 375);
@@ -88,51 +91,105 @@ public class CoreActivity extends Activity{
         imageView.invalidate();
 //        Log.w("Preview: ", " " + imageView.isShown());
         label.setText("Color: " + color);
-        back.setOnClickListener(new View.OnClickListener() {
+    /*    back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 backToMain();
             }
         });
 
+*/
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Log.w("Toggle Button", "Im true");
+                    checked = true;
+                    toggleButton.setTextOn("White");
+                } else {
+                    checked = false;
+                    Log.w("Toggle Button", "Im false");
+                    toggleButton.setTextOff("Black");
+                }
+            }
+        });
 
         gray.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String colors2Change = boxesChecked();
-                if (isChecked) {
-                    Log.w("Checked", "Gray is checked");
-                    Log.w("Checked", "Changing colors");
-                    int[] nRGB = new int[rgb.length];
-                    for (int i = 0; i < rgb.length; i++) {
-                        if (colors2Change.contains(getColor((int) rgb[i])))
-                            nRGB[i] = Color.BLACK;
-                        else
-                            nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+                if (checked && toggleButton.getText().equals("White")) {
+                    if (isChecked) {
+                        Log.w("Checked", "Gray is checked");
+                        Log.w("Checked", "Changing colors");
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.WHITE;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        colors2Change = boxesChecked();
+                        Log.w("checkedBoxes", colors2Change);
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.WHITE;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
 
                     }
-                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
-                    Drawable d = new BitmapDrawable(getResources(), bitmap);
-                    imageView.setBackground(d);
-                    imageView.setRotation(90);
-                    imageView.setVisibility(View.VISIBLE);
+                }else{
+                    if (isChecked) {
+                        Log.w("Checked", "Gray is checked");
+                        Log.w("Checked", "Changing colors");
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.BLACK;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
 
-                } else {
-                    colors2Change = boxesChecked();
-                    Log.w("checkedBoxes", colors2Change);
-                    int[] nRGB = new int[rgb.length];
-                    for (int i = 0; i < rgb.length; i++) {
-                        if (colors2Change.contains(getColor((int) rgb[i])))
-                            nRGB[i] = Color.BLACK;
-                        else
-                            nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        colors2Change = boxesChecked();
+                        Log.w("checkedBoxes", colors2Change);
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.BLACK;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
 
                     }
-                    bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
-                    Drawable d = new BitmapDrawable(getResources(), bitmap);
-                    imageView.setBackground(d);
-                    imageView.setRotation(90);
-                    imageView.setVisibility(View.VISIBLE);
 
                 }
             }
@@ -224,40 +281,79 @@ public class CoreActivity extends Activity{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String colors2Change = boxesChecked();
-                Log.w("checkedBoxes:", colors2Change);
-                if (isChecked) {
-                    Log.w("Checked", "Green is checked");
-                    Log.w("Checked", "Changing colors");
-                    int [] nRGB = new int[rgb.length];
-                    for(int i=0; i<rgb.length; i++){
-                        if(colors2Change.contains(getColor((int) rgb[i])))
-                            nRGB[i] = Color.BLACK;
-                        else
-                            nRGB[i] = ((((int)rgb[i]))| 0xff000000);
-
-                    }
-                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
-                    Drawable d = new BitmapDrawable(getResources(), bitmap);
-                    imageView.setBackground(d);
-                    imageView.setRotation(90);
-                    imageView.setVisibility(View.VISIBLE);
-
-                } else {
-                    colors2Change = boxesChecked();
+                if (!checked && toggleButton.getText().equals("Black")) {
                     Log.w("checkedBoxes:", colors2Change);
-                    int [] nRGB = new int[rgb.length];
-                    for(int i=0; i<rgb.length; i++){
-                        if(colors2Change.contains(getColor((int) rgb[i])))
-                            nRGB[i] = Color.BLACK;
-                        else
-                            nRGB[i] = ((((int)rgb[i]))| 0xff000000);
+                    if (isChecked) {
+                        Log.w("Checked", "Green is checked");
+                        Log.w("Checked", "Changing colors");
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.BLACK;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        colors2Change = boxesChecked();
+                        Log.w("checkedBoxes:", colors2Change);
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.BLACK;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
 
                     }
-                    bitmap = Bitmap.createBitmap(nRGB, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
-                    Drawable d = new BitmapDrawable(getResources(), bitmap);
-                    imageView.setBackground(d);
-                    imageView.setRotation(90);
-                    imageView.setVisibility(View.VISIBLE);
+                }else{
+                    if (isChecked) {
+                        Log.w("Checked", "Green is checked");
+                        Log.w("Checked", "Changing colors");
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.WHITE;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
+
+                    } else {
+                        colors2Change = boxesChecked();
+                        Log.w("checkedBoxes", colors2Change);
+                        int[] nRGB = new int[rgb.length];
+                        for (int i = 0; i < rgb.length; i++) {
+                            if (colors2Change.contains(getColor((int) rgb[i])))
+                                nRGB[i] = Color.WHITE;
+                            else
+                                nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+
+                        }
+                        bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
+                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                        imageView.setBackground(d);
+                        imageView.setRotation(90);
+                        imageView.setVisibility(View.VISIBLE);
+
+                    }
 
                 }
             }
@@ -817,10 +913,6 @@ public class CoreActivity extends Activity{
     }
 
 
-    private void backToMain(){
-        Intent intent = new Intent(CoreActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onPause() {
@@ -878,6 +970,9 @@ public class CoreActivity extends Activity{
             bitmap = rotateBitmap();
             MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "C-Color image" , "Saved image");
             toast.show();
+        }else if(id == R.id.back){
+            Intent intent = new Intent(CoreActivity.this, MainActivity.class);
+            startActivity(intent);
         }
         /*//noinspection SimplifiableIfStatement
         if (id == R.id.flashlight) {

@@ -662,7 +662,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.save).setVisible(false);
-
+        menu.findItem(R.id.back).setVisible(false);
         return true;
     }
 

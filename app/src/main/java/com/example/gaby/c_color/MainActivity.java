@@ -1,30 +1,23 @@
 package com.example.gaby.c_color;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
 
 
 
@@ -33,17 +26,81 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     Camera.Parameters param;
     TextView label;
     String color;
-    final String LABEL_TXT = "Color: ";
-    String [] colors = {/*0*/"Black",/*1*/"Brown",/*2*/"Red",/*3*/"Red",/*4*/"Green",/*5*/"Yellow",/*6*/"Brown",/*7*/"Orange",
-                        /*8*/"Green",/*9*/"Green",/*10*/"Yellow",/*11*/"Brown",/*12*/"Green",/*13*/"Green",/*14*/"Green",/*15*/"Yellow",
-                        /*16*/"Blue",/*17*/"Purple",/*18*/"Purple",/*19*/"Purple",/*20*/"Blue",/*21*/"Gray",/*22*/"Brown",/*23*/"Brown",
-                        /*24*/"Green",/*25*/"Green",/*26*/"Green",/*27*/"Brown",/*28*/"Green",/*29*/"Green",/*30*/"Green",/*31*/"Yellow",
-                        /*32*/"Blue",/*33*/"Purple",/*34*/"Purple",/*35*/"Pink",/*36*/"Blue",/*37*/"Blue",/*38*/"Purple",/*39*/"Pink",
-                        /*40*/"Green",/*41*/"Green",/*42*/"Gray",/*43*/"Pink",/*44*/"Green",/*45*/"Green",/*46*/"Green",/*47*/"Yellow",
-                        /*48*/"Blue",/*49*/"Blue",/*50*/ "Purple",/*51*/"Pink",/*52*/"Blue",/*53*/"Blue",/*54*/"Purple",/*55*/"Pink",
-                        /*56*/"Blue",/*57*/"Blue",/*58*/"Purple",/*59*/"Pink",/*60*/"Green",/*61*/"Green",/*62*/"Gray",/*63*/"Gray" };
 
-    // number of pixels//transforms NV21 pixel data into RGB pixels
+    final String [] colors = { "Black", "Black", "Black", "Blue", "Blue", "Blue", "Blue","Blue",
+                        "Black","Black","Black", "Blue","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Blue","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Black","Black","Black","Black","Purple","Purple","Blue","Blue",
+                        "Black","Black","Black","Black","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Blue","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Blue","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Green","Green","Gray","Gray","Purple","Purple","Purple","Purple",
+                        "Green","Green","Green","Gray","Gray","Purple","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Blue","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Gray","Purple","Purple","Purple","Purple",
+                        "Green","Green","Gray","Gray","Gray","Gray","Purple","Purple",
+                        "Green","Green","Green","Gray","Gray","Gray","Blue","Blue",
+                        "Green","Green","Green","Green","Gray","Gray","Blue","Blue",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Red","Brown","Purple","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Gray","Gray","Purple","Purple","Purple",
+                        "Green","Green","Green","Gray","Gray","Gray","Gray","Purple",
+                        "Green","Green","Green","Green","Gray","Gray","Gray","Gray",
+                        "Green","Green","Green","Green","Green","Gray","Gray","Purple",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Red","Red","Red","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Gray","Gray","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Brown","Gray","Gray","Purple","Purple",
+                        "Green","Green","Green","Gray","Gray","Gray","Gray","Purple",
+                        "Green","Green","Green","Green","Gray","Gray","Gray","Gray",
+                        "Green","Green","Green","Green","Green","Green","Green","Blue",
+
+                        "Red","Red","Red","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Purple","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown", "Brown","Purple","Purple","Purple","Purple",
+                        "Brown","Brown","Brown","Brown","Gray","Purple","Purple","Purple",
+                        "Yellow","Yellow","Yellow","Yellow","Gray","Gray","Gray","Purple",
+                        "Yellow","Yellow","Yellow","Yellow","Gray","Gray","Gray","Gray",
+                        "Green","Green","Green","Green","Gray","Gray","Gray","Gray",
+
+                        "Red","Red","Red","Red","Pink","Pink","Pink","Pink",
+                        "Red","Red","Red","Red","Pink","Pink","Pink","Pink",
+                        "Orange","Orange","Red","Red","Pink","Pink","Pink","Pink",
+                        "Orange","Orange","Orange","Red","Pink","Pink","Pink","Pink",
+                        "Orange","Orange","Orange","Orange","Pink","Pink","Pink","Pink",
+                        "Orange","Orange","Orange","Orange","Orange","Pink","Pink","Pink",
+                        "Orange","Orange","Orange","Orange","Orange","Gray","Pink","Pink",
+                        "Yellow","Yellow","Yellow","Yellow","Yellow","Gray","Gray","Gray"};
+
+// number of pixels//transforms NV21 pixel data into RGB pixels
+
     long [] rgb;
     long midColor;
     SurfaceView surfaceView;
@@ -81,17 +138,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // recording = true;
                 color = getColor();
                 label.setText(color);
                 label.setTextSize(20);
-                //    label.setBackgroundColor((int)midColor);
-            //    Log.w("Color", "midColor" + (int) midColor);
                 switchActivity();
 
-                //label.setTextColor((int)(midColor));
             }
         });
+
     }
 
 
@@ -112,10 +166,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     }
 
     public String getColor() {
-        int rRed = getRed(midColor) / 64;
-        int rBlue = getBlue(midColor) / 64;
-        int rGreen = getGreen(midColor) / 64;
-        int reducedColor = ((rRed) + (rGreen * 4) + (rBlue * 16));
+        int rRed = getRed(midColor) / 32;
+        int rBlue = getBlue(midColor) / 32;
+        int rGreen = getGreen(midColor) / 32;
+        int reducedColor = ((rRed*64) + (rGreen * 8) + (rBlue));
         if ((getRed(midColor) + getBlue(midColor) + getGreen(midColor)) == 765)
             return "White";
         for (int i = 0; i < colors.length; i++) {
@@ -125,247 +179,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         return "Not recognizable";
     }
 
-     /*   switch(reducedColor){
-            case 0: //(0,0,0) 0=32,1=96,2=160,3=224
-                return "Black";
-            case 1: //(1,0,0)  (96,32,32)
-                return "Brown";  // Brown
-            case 2: //(2,0,0)  (160,32,32)
-                return "Red"; // RED
-            case 3: //(3,0,0) (224,32,32)
-                return "Red"; // RED
-            case 4: //(0,1,0)  (32,96,32)
-                return "Green"; // GREEN
-            case 5: //(1,1,0) (96,96,32)
-                return "Yellow"; // YELLOW
-            case 6: //(2,1,0)  (160,96,32)
-                return "Brown"; // BROWN
-            case 7: //(3,1,0) (224,96,32)
-                return "Orange"; // ORANGE
-            case 8: //(0,2,0)
-                return "Green"; // GREEN
-            case 9: //(1,2,0)
-                return "Green"; //GREEN
-            case 10: //(2,2,0)
-                return "Yellow"; // YELLOW
-            case 11: //(3,2,0)
-                return "Brown"; // BROWN
-            case 12: //(0,3,0)
-                return "Green"; //GREEN
-            case 13: //(1,3,0)
-                return "Green"; //GREEN
-            case 14: //(2,3,0)
-                return "Green"; //GREEN
-            case 15: //(3,3,0)
-                return "Yellow"; //YELLOW
-            case 16: //(0,0,1)
-      //          Log.w("Switch:", "Im at 16");
-                return "Blue"; //BLUE
-            case 17: //(1,0,1)
-                return "Purple"; //PURPLE
-            case 18: //(2,0,1)
-                return "Purple"; //PURPLE
-            case 19: //(3,0,1)
-                return "Purple";  //PURPLE
-            case 20: //(0,1,1)
-                return "Blue"; //BLUE
-            case 21: //(1,1,1)
-                return "Gray"; //GRAY
-            case 22: //(2,1,1)
-                return "Brown"; //BROWN
-            case 23: //(3,1,1)
-                return "Brown"; // BROWN
-            case 24: //(0,2,1)
-                return "Green"; //GREEN
-            case 25: //(1,2,1)
-                return "Green"; //GREEN
-            case 26: //(2,2,1)
-                return "Green"; //Green
-            case 27: //(3,2,1)
-                return "Brown"; //Brown
-            case 28: //(0,3,1)
-                return "Green";  //GREEN
-            case 29: //(1,3,1)
-                return "Green"; //GREEN
-            case 30: //(2,3,1)
-                return "Green"; //GREEN
-            case 31: //(3,3,1)
-                return "Yellow"; //Yellow
-            case 32: //(0,0,2)
-       //       Log.w("Switch:", "Im at 32");
-                return "Blue"; //Blue
-            case 33: //(1,0,2)
-                return "Purple"; //Purple
-            case 34: //(2,0,2)
-                return "Purple"; //Purple
-            case 35: //(3,0,2)
-                return "Pink"; //Pink
-            case 36: //(0,1,2)
-       //         Log.w("Switch:", "Im at 36");
-                return "Blue"; //BLUE
-            case 37: //(1,1,2)
-       //         Log.w("Switch:", "Im at 37");
-                return "Blue"; //BLUE
-            case 38: //(2,1,2)
-                return "Purple"; //PURPLE
-            case 39: //(3,1,2)
-                return "Pink"; //PINK
-            case 40: //(0,2,2)
-       //         Log.w("Switch:", "Im at 40");
-                return "Green"; //GREEN
-            case 41: //(1,2,2)
-        //        Log.w("Switch:", "Im at 41");
-                return "Green"; //GREEN
-            case 42: //(2,2,2)
-                return "Gray"; //GRAY
-            case 43: //(3,2,2)
-                return "Pink"; //PINK
-            case 44: //(0,3,2)
-                return "Green"; //GREEN
-            case 45: //(1,3,2)
-                return "Green"; //GREEN
-            case 46: //(2,3,2)
-                return "Green"; //GREEN
-            case 47: //(3,3,2)
-                return "Yellow"; //YELLOW
-            case 48: //(0,0,3)
-        //        Log.w("Switch:", "Im at 48");
-                return "Blue"; // BLUE
-            case 49: //(1,0,3)
-         //       Log.w("Switch:", "Im at 49");
-                return "Blue"; //BLUE
-            case 50: //(2,0,3)
-                return "Purple"; //PURPLE
-            case 51: //(3,0,3)
-                return "Pink"; //PINK
-            case 52: //(0,1,3)
-         //       Log.w("Switch:", "Im at 52");
-                return "Blue"; //BLUE
-            case 53: //(1,1,3)
-         //       Log.w("Switch:", "Im at 53");
-                return "Blue"; //BLUE
-            case 54: //(2,1,3)
-                return "Purple"; //PURPLE
-            case 55: //(3,1,3)
-                return "Pink"; //PINK
-            case 56: //(0,2,3)
-         //       Log.w("Switch:", "Im at 56");
-                return "Blue"; //BLUE
-            case 57: //(1,2,3)
-        //        Log.w("Switch:", "Im at 57");
-                return "Blue"; //BLUE
-            case 58: //(2,2,3)
-        //        Log.w("Switch:", "Im at 58");
-                return "Purple"; //PURPLE
-            case 59: //(3,2,3)
-                return "Pink"; //PINK
-            case 60: //(0,3,3)
-         //       Log.w("Switch:", "Im at 60");
-                return "Green"; //GREEN
-            case 61: //(1,3,3)
-         //       Log.w("Switch:", "Im at 61");
-                return "Green"; //GREEN
-            case 62: //(2,3,3)
-          //      Log.w("Switch:", "Im at 62");
-                return "Gray"; // GRAY
-            case 63: //(3,3,3)
-                return "Gray"; //GRAY
-            default:
-                return "Unidentifiable color";
-        }*/
-
-    /*switch(reducedColor){
-                case 0:
-                    color = "Black";
-                    break;
-                case 1:
-                    color = "Blue";
-                    break;
-                case 2:
-                    color = "Green";
-                    break;
-                case 3:
-                    color = "Cyan";
-                    break;
-                case 4:
-                    color = "Red";
-                    break;
-                case 5:
-                    color = "Purple";
-                    break;
-                case 6:
-                    color = "Yellow";
-                    break;
-                case 7:
-                    color = "White";
-                    break;
-                default:
-                    color = "Undetermined";
-
-            }*/
-/*
-    public double getClosest(){
-        double closest = distanceFromPerfect(average[0]);
-        for(int i = 1; i < MAX_AVERAGE; i++){
-            if(closest < distanceFromPerfect(average[i])){
-                closest = distanceFromPerfect(average[i]);
-            }
-        }
-        return closest;
-
-    }
-
-    public void addAverage(long aver){
-        if(recording){
-            this.average[currIndex] = aver;
-            currIndex++;
-            //       Log.w("worked", "adding the average worked");
-            //circular array for measurements.
-            if(currIndex == MAX_AVERAGE){
-                Log.w("going to calc", "maxAverage was reached");
-                currIndex = 0;
-                recording = false;
-                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-                //           Log.w("Average", "getting average was successful");
-           //     double percentage = getClosest()
-                String color = getColor();
-                label.setText("Color: " + color);
-                switch(color.toUpperCase()){
-                    case "RED":
-                        label.setHighlightColor(Color.RED);
-                        break;
-                    case "BLUE":
-                        label.setHighlightColor(Color.BLUE);
-                        break;
-
-
-                }
-
-                //         Log.w("Percentage", "percentage was successful");
-     //           num.setText(decimalFormat.format(percentage) + "%");
-     //           mProgress.setProgress((int) percentage);
-
-                //   param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                //   camera.setParameters(param);
-            }
-        }
-    }
-    public double distanceFromPerfect(long color){
-        long red = getRed(color);
-        long blue = getBlue(color);
-        long green = getGreen(color);
-
-   //     final double maxDistance = Math.sqrt( Math.pow((IDEAL_RED),2) + Math.pow((IDEAL_GREEN),2) + Math.pow((IDEAL_BLUE), 2));
-        //    Log.w("distance", "calculating perfect distance was successful");
-  //      double distance = Math.sqrt(Math.pow((IDEAL_RED-red),2)+ Math.pow((IDEAL_GREEN-green),2) + Math.pow((IDEAL_BLUE-blue),2));
-  //      Log.w("color", "Red: " + red + " blue" + blue + " green " + green);
-   //     return ((100)- ((distance /maxDistance) *100));
-        return 0;
-    }
-
-
-*/
     //return 0-255
     public int getRed(long color){
         int red = (int) (((color & 0xFF0000) >>16) & 0xFF);
@@ -408,32 +221,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                     // number of pixels//transforms NV21 pixel data into RGB pixels
                     // convert
                     rgb = decodeYUV420SP(rgb, data, frameWidth, frameHeight);
-                    //  Log.w("decoding", "decoding was successful");
-            /*        long num;
-                    long avg =0;
-                    for(int  i = 0; i< rgb.length; i++){
-                        num = rgb[i];
-                        //num = checkColor(rgb[i]);
-                        //     Log.w("color", "checkYellow was successful");
-                        //if it is within range, than num = rgb[i] else it = 0;
-                        avg += num;
-                        count++;
 
-                    }
-                    Log.w("count", " " + count + " length: " + rgb.length);
-                    avg = avg/count;
-                    int accounted = ((count *100)/rgb.length);
-                    count = 1;
-                    //  Log.w("accounted", "accounted was successful");
-                    if(accounted >= MIN_YELLOW){
-                        addAverage(avg);
-                        //     Log.w("addAverage", "was successful");
-                    }
-               */
-                    //   if(recording){
                     midColor = rgb[rgb.length / 2];
-                    //      recording = false;
-                    //     }
                 }
             });
             if(param.isZoomSupported()){
@@ -444,14 +233,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-            //            Log.w("Zoom", "I, in ZoomIn");
                         if (param.getZoom() < maxZoom) {
                             int currZoom = param.getZoom();
-              //              Log.w("Zoom", "CurrZoom:" + currZoom);
                             currZoom +=2;
                             if(currZoom > maxZoom)
                                 currZoom = maxZoom;
-                //            Log.w("Zoom", "CurrZoom after:" + currZoom);
                             param.setZoom(currZoom);
                             camera.setParameters(param);
 
@@ -461,14 +247,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                 //       Log.w("Zoom", "I, in ZoomOut");
                         if (param.getZoom() > 0) {
                             int currZoom = param.getZoom();
-                   //         Log.w("Zoom", "CurrZoom:" + currZoom);
                             currZoom -=2;
                             if(currZoom < 0)
                                 currZoom = 0;
-                    //        Log.w("Zoom", "CurrZoom after:" + currZoom);
                             param.setZoom(currZoom);
                             camera.setParameters(param);
 
@@ -477,7 +260,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 });
 
             }else{
-            //    Log.w("Zoom", "zoom does not work");
                 zoomControls.setVisibility(View.GONE);
 
             }
@@ -509,7 +291,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         camera.setDisplayOrientation(90);
         if(landscape)
             camera.setDisplayOrientation(0);
-        // Log.i("Camera", "camera is displayed properly.");
         // modify parameter
         param.setPreviewSize(352, 288);
         //param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -547,8 +328,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
     //  Byte decoder : ---------------------------------------------------------------------
     public long[] decodeYUV420SP(long[] rgb, byte[] yuv420sp, int width, int height) {
-        // Pulled directly from:
-        // http://ketai.googlecode.com/svn/trunk/ketai/src/edu/uic/ketai/inputService/KetaiCamera.java
         final int frameSize = width * height;
 
         for (int j = 0, yp = 0; j < height; j++) { int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
@@ -631,11 +410,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         landscape = true;
-     //   Log.w("orientation", "I am at onConfigurationChanged");
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-      //      Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-      //      Log.w("orientation","Im inside the if landscape");
             param.setRotation(0);
             camera.setParameters(param);
             camera.setDisplayOrientation(0);
@@ -644,8 +420,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             else
                 flashLightOff();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-      //      Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
-      //      Log.w("orientation", "Im inside the if landscape");
+
             param.setRotation(90);
             camera.setParameters(param);
             camera.setDisplayOrientation(90);
@@ -662,7 +437,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.save).setVisible(false);
-        menu.findItem(R.id.back).setVisible(false);
         return true;
     }
 

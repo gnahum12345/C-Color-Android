@@ -4,7 +4,6 @@
         android:orderInCategory="100" android:showAsAction="always" />
     <item android:id="@+id/save" android:title="Save to photos" android:orderInCategory="200"
         android:showAsAction="always"/>
-    <item android:id="@+id/back" android:title="Back to Main" android:orderInCategory="50"
-        android:showAsAction="never"/>
+
 
 </menu>

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
 import android.graphics.Matrix;
@@ -23,11 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.FileInputStream;
+
 
 public class CoreActivity extends Activity{
     ImageView imageView;
     TextView label;
-    long[] rgb;
+   // long[] rgb;
     int[] rgbInt;
     String [] colors;
     int previewWidth;
@@ -37,8 +40,7 @@ public class CoreActivity extends Activity{
     ToggleButton toggleButton;
     boolean checked = false;
 
-
-    CheckBox gray,red,green,blue, brown, yellow, purple, pink, orange;
+    CheckBox gray,red,green,blue,brown,yellow,purple,pink,orange;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,14 +50,22 @@ public class CoreActivity extends Activity{
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         }
-
+        //TODO open file read RGB and delete file.
         imageView = (ImageView) findViewById(R.id.imageView);
-        Log.w("activity", "im in core");
+      //  Log.w("activity", "im in core");
         toggleButton = (ToggleButton) findViewById(R.id.BorW);
         toggleButton.setText("Black");
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
         colors = getIntent().getStringArrayExtra("arrayOfColors");
+        String filename = getIntent().getStringExtra("image");
+        try {
+            FileInputStream is = this.openFileInput(filename);
+            bitmap = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         red = (CheckBox) findViewById(R.id.Red);
         brown = (CheckBox) findViewById(R.id.Brown);
@@ -66,19 +76,37 @@ public class CoreActivity extends Activity{
         orange = (CheckBox) findViewById(R.id.Orange);
         green = (CheckBox) findViewById(R.id.Green);
         gray = (CheckBox) findViewById(R.id.gray);
-        rgb = getIntent().getLongArrayExtra("rgb");
+       // rgb = getIntent().getLongArrayExtra("rgb");
         previewHeight = getIntent().getIntExtra("Height", 375);
-        previewWidth = getIntent().getIntExtra("Width",375);
-        rgbInt = new int[rgb.length];
+        previewWidth = getIntent().getIntExtra("Width", 375);
+       /* if(rgb != null)
+            rgbInt = new int[rgb.length];
+        else
+            Log.w("Activity","Sorry");
         for(int i = 0; i<rgb.length; i++){
             rgbInt[i] =  (((int)rgb[i]) | 0xff000000);
 
-        }
+        }*/
+
+        rgbInt = new int[previewHeight*previewWidth];
+        bitmap.getPixels(rgbInt, 0, previewWidth, 0, 0, previewWidth, previewHeight);
 
 
+        for (int y = 0; y < previewHeight; y++){
+            for (int x = 0; x < previewWidth; x++)
+            {
+                int index = y * previewWidth + x;
+                int R = (rgbInt[index] >> 16) & 0xff;     //bitwise shifting
+                int G = (rgbInt[index] >> 8) & 0xff;
+                int B = rgbInt[index] & 0xff;
 
+                //R,G.B - Red, Green, Blue
+                //to restore the values after RGB modification, use
+                //next statement
+                rgbInt[index] = 0xff000000 | (R << 16) | (G << 8) | B;
+            }}
 
-        bitmap = Bitmap.createBitmap(rgbInt, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
+        //bitmap = Bitmap.createBitmap(rgbInt, previewWidth , previewHeight, Bitmap.Config.ARGB_8888);
 
         Drawable d = new BitmapDrawable(getResources(), bitmap);
 
@@ -93,7 +121,7 @@ public class CoreActivity extends Activity{
             public boolean onTouch(View v, MotionEvent event) {
                 float x = event.getX();
                 float y =   event.getY();
-                Log.w("ImageView","X:" + x + "\nY:" + y + "\nWidth:" + previewWidth + "\nHeight:" + previewHeight);
+            //    Log.w("ImageView","X:" + x + "\nY:" + y + "\nWidth:" + previewWidth + "\nHeight:" + previewHeight);
                 int col = getColorBitmap(x,y,v);
                 label.setText("Color: " + getColor(col));
                 return true;
@@ -192,12 +220,12 @@ public class CoreActivity extends Activity{
     private void changeImage(){
         String colors2Change = boxesChecked();
         if(!checked && (toggleButton.getText().equals("Black"))) {
-            int[] nRGB = new int[rgb.length];
-            for (int i = 0; i < rgb.length; i++) {
-                if (colors2Change.contains(getColor((int) rgb[i])))
+            int[] nRGB = new int[rgbInt.length];
+            for (int i = 0; i < rgbInt.length; i++) {
+                if (colors2Change.contains(getColor((int) rgbInt[i])))
                     nRGB[i] = Color.BLACK;
                 else
-                    nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+                    nRGB[i] = ((((int) rgbInt[i])) | 0xff000000);
 
             }
             bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);
@@ -206,12 +234,12 @@ public class CoreActivity extends Activity{
             imageView.setRotation(90);
             imageView.setVisibility(View.VISIBLE);
         }else {
-            int[] nRGB = new int[rgb.length];
-            for (int i = 0; i < rgb.length; i++) {
-                if (colors2Change.contains(getColor((int) rgb[i])))
+            int[] nRGB = new int[rgbInt.length];
+            for (int i = 0; i < rgbInt.length; i++) {
+                if (colors2Change.contains(getColor((int) rgbInt[i])))
                     nRGB[i] = Color.WHITE;
                 else
-                    nRGB[i] = ((((int) rgb[i])) | 0xff000000);
+                    nRGB[i] = ((((int) rgbInt[i])) | 0xff000000);
 
             }
             bitmap = Bitmap.createBitmap(nRGB, previewWidth, previewHeight, Bitmap.Config.ARGB_8888);

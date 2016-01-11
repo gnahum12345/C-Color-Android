@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback {
@@ -101,7 +107,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 // number of pixels//transforms NV21 pixel data into RGB pixels
 
-    long [] rgb;
+    byte[] rgbdata;
+    int[] rgb;
     long midColor;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
@@ -130,7 +137,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         sliders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                rgb = decodeYUV420SPINT(rgbdata, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                midColor = rgb[rgb.length / 2];
                 label.setText("Color: " + getColor());
 
             }
@@ -138,9 +146,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                rgb = decodeYUV420SPINT(rgbdata, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                midColor = rgb[rgb.length /2];
                 color = getColor();
                 label.setText(color);
                 label.setTextSize(20);
+          //      Log.w("Switch Activity", "Im about to switch");
                 switchActivity();
 
             }
@@ -150,20 +161,43 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 
     private void switchActivity(){
-        Log.w("SwitchActivity", "Im here");
+     //   Log.w("SwitchActivity", "Im here");
         if(flashlight){
             param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             camera.setParameters(param);
         }
         Intent intent = new Intent(MainActivity.this, CoreActivity.class);
-        intent.putExtra("rgb", rgb);
-        intent.putExtra("Width",camera.getParameters().getPreviewSize().width);
+        //TODO Save rgb to file and send file name.
+
+       // Log.w("Switch", "Before extra");
+       // intent.putExtra("rgb", rgb);
+        try{
+            //write File
+            Bitmap bitmap = Bitmap.createBitmap(rgb,camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height,Bitmap.Config.ARGB_8888);
+            String fileName = "bitmap.png";
+            FileOutputStream stream = this.openFileOutput(fileName, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+
+            //cleanUp
+            stream.close();
+            bitmap.recycle();
+            intent.putExtra("image", fileName);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+        intent.putExtra("Width", camera.getParameters().getPreviewSize().width);
         intent.putExtra("Height",camera.getParameters().getPreviewSize().height);
         intent.putExtra("label", color);
         intent.putExtra("arrayOfColors", colors);
+      //  Log.w("Switch", "before start");
         startActivity(intent);
 
+
     }
+
+
 
     public String getColor() {
         int rRed = getRed(midColor) / 32;
@@ -220,9 +254,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                     int frameWidth = camera.getParameters().getPreviewSize().width;
                     // number of pixels//transforms NV21 pixel data into RGB pixels
                     // convert
-                    rgb = decodeYUV420SP(rgb, data, frameWidth, frameHeight);
+                    rgbdata = data;
 
-                    midColor = rgb[rgb.length / 2];
+                    //rgb = decodeYUV420SP(rgb, data, frameWidth, frameHeight);
+                    //midColor = rgb[rgb.length / 2];
                 }
             });
             if(param.isZoomSupported()){
@@ -306,7 +341,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             int frameHeight = camera.getParameters().getPreviewSize().height;
             int frameWidth = camera.getParameters().getPreviewSize().width;
             // number of pixels//transforms NV21 pixel data into RGB pixels
-            rgb = new long[frameWidth * frameHeight];
+            rgb = new int[frameWidth * frameHeight];
         } catch (Exception e) {
             // check for exceptions
             System.err.println(e);
@@ -324,6 +359,39 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         camera = null;
     }
 
+    //------BYTE DECODER FOR INT-------------------------//
+    public int[] decodeYUV420SPINT( byte[] yuv420sp, int width, int height) {
+
+        final int frameSize = width * height;
+
+        int rgb[]=new int[width*height];
+        for (int j = 0, yp = 0; j < height; j++) {
+            int uvp = frameSize + (j >> 1) * width, u = 0, v = 0;
+            for (int i = 0; i < width; i++, yp++) {
+                int y = (0xff & ((int) yuv420sp[yp])) - 16;
+                if (y < 0) y = 0;
+                if ((i & 1) == 0) {
+                    v = (0xff & yuv420sp[uvp++]) - 128;
+                    u = (0xff & yuv420sp[uvp++]) - 128;
+                }
+
+                int y1192 = 1192 * y;
+                int r = (y1192 + 1634 * v);
+                int g = (y1192 - 833 * v - 400 * u);
+                int b = (y1192 + 2066 * u);
+
+                if (r < 0) r = 0; else if (r > 262143) r = 262143;
+                if (g < 0) g = 0; else if (g > 262143) g = 262143;
+                if (b < 0) b = 0; else if (b > 262143) b = 262143;
+
+                rgb[yp] = 0xff000000 | ((r << 6) & 0xff0000) | ((g >> 2) &
+                        0xff00) | ((b >> 10) & 0xff);
+
+
+            }
+        }
+        return rgb;
+    }
 
 
     //  Byte decoder : ---------------------------------------------------------------------

@@ -455,6 +455,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onResume(){
         super.onResume();
+        surfaceCreated(surfaceHolder);
         if(flashlight)
             flashLightOn();
         refreshCamera();

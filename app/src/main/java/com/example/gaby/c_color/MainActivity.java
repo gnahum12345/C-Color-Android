@@ -116,6 +116,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     Button image;
     boolean flashlight = false;
     boolean landscape = false;
+    int currZoom;
     Camera.PictureCallback rawCallback;
     Camera.ShutterCallback shutterCallback;
     Camera.PictureCallback jpegCallback;
@@ -147,11 +148,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             @Override
             public void onClick(View v) {
                 rgb = decodeYUV420SPINT(rgbdata, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
-                midColor = rgb[rgb.length /2];
+                midColor = rgb[rgb.length / 2];
                 color = getColor();
                 label.setText(color);
                 label.setTextSize(20);
-          //      Log.w("Switch Activity", "Im about to switch");
+                //      Log.w("Switch Activity", "Im about to switch");
                 switchActivity();
 
             }
@@ -167,7 +168,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             camera.setParameters(param);
         }
         Intent intent = new Intent(MainActivity.this, CoreActivity.class);
-        //TODO Save rgb to file and send file name.
 
        // Log.w("Switch", "Before extra");
        // intent.putExtra("rgb", rgb);
@@ -269,7 +269,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                     @Override
                     public void onClick(View v) {
                         if (param.getZoom() < maxZoom) {
-                            int currZoom = param.getZoom();
+                            currZoom = param.getZoom();
                             currZoom +=2;
                             if(currZoom > maxZoom)
                                 currZoom = maxZoom;
@@ -455,7 +455,26 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onResume(){
         super.onResume();
-        surfaceCreated(surfaceHolder);
+        try {
+            // open the camera
+            camera = Camera.open();
+            zoomControls = (ZoomControls) findViewById(R.id.zoomControls);
+        } catch (RuntimeException e) {
+            // check for exceptions
+            System.err.println(e);
+            return;
+        }
+        param = camera.getParameters();
+        param.setPreviewFormat(ImageFormat.NV21);
+        camera.setDisplayOrientation(90);
+        if(landscape)
+            camera.setDisplayOrientation(0);
+        // modify parameter
+        param.setPreviewSize(352, 288);
+        //param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        param.setZoom(currZoom);
+        param.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+        camera.setParameters(param);
         if(flashlight)
             flashLightOn();
         refreshCamera();

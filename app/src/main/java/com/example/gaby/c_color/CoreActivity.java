@@ -127,6 +127,7 @@ public class CoreActivity extends Activity{
                 return true;
             }
         });
+
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -141,8 +142,6 @@ public class CoreActivity extends Activity{
                    toggleButton.setTextOff("Black");
                    changeImage();
                }
-
-
             }
         });
 
@@ -249,6 +248,7 @@ public class CoreActivity extends Activity{
             imageView.setVisibility(View.VISIBLE);
         }
     }
+
     private String boxesChecked(){
         String boxes = "";
         if(red.isChecked())
@@ -304,7 +304,6 @@ public class CoreActivity extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     @Override
@@ -315,15 +314,12 @@ public class CoreActivity extends Activity{
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
     }
 
     private Bitmap rotateBitmap(){
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
-
         return (Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(),  bitmap.getHeight(), matrix, true));
-
     }
 
 
@@ -332,7 +328,6 @@ public class CoreActivity extends Activity{
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.flashlight).setVisible(false);
-
         return true;
     }
 

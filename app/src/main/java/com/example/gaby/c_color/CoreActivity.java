@@ -3,6 +3,7 @@ package com.example.gaby.c_color;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -28,9 +29,9 @@ import java.io.FileInputStream;
 
 
 public class CoreActivity extends Activity{
+
     ImageView imageView;
     TextView label;
-   // long[] rgb;
     int[] rgbInt;
     String [] colors;
     int previewWidth;
@@ -41,6 +42,7 @@ public class CoreActivity extends Activity{
     boolean checked = false;
 
     CheckBox gray,red,green,blue,brown,yellow,purple,pink,orange;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +52,11 @@ public class CoreActivity extends Activity{
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         }
-        //TODO open file read RGB and delete file.
         imageView = (ImageView) findViewById(R.id.imageView);
-      //  Log.w("activity", "im in core");
         toggleButton = (ToggleButton) findViewById(R.id.BorW);
-        toggleButton.setText("Black");
+        toggleButton.setText("White");
+        toggleButton.setTextOff("White");
+        toggleButton.setTextOn("Black");
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
         colors = getIntent().getStringArrayExtra("arrayOfColors");
@@ -76,19 +78,12 @@ public class CoreActivity extends Activity{
         orange = (CheckBox) findViewById(R.id.Orange);
         green = (CheckBox) findViewById(R.id.Green);
         gray = (CheckBox) findViewById(R.id.gray);
-       // rgb = getIntent().getLongArrayExtra("rgb");
         previewHeight = getIntent().getIntExtra("Height", 375);
         previewWidth = getIntent().getIntExtra("Width", 375);
-       /* if(rgb != null)
-            rgbInt = new int[rgb.length];
-        else
-            Log.w("Activity","Sorry");
-        for(int i = 0; i<rgb.length; i++){
-            rgbInt[i] =  (((int)rgb[i]) | 0xff000000);
 
-        }*/
 
         rgbInt = new int[previewHeight*previewWidth];
+        Log.w("Activity", "PreviewWidth:" + previewWidth + "\npreviewHeight:" + previewHeight);
         bitmap.getPixels(rgbInt, 0, previewWidth, 0, 0, previewWidth, previewHeight);
 
 
@@ -114,7 +109,10 @@ public class CoreActivity extends Activity{
         imageView.setRotation(90);
         imageView.setVisibility(View.VISIBLE);
         imageView.invalidate();
-        label.setText("Color: " + color);
+        if(color == null)
+            label.setText("Color: ");
+        else
+            label.setText("Color: " + color);
 
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -123,6 +121,7 @@ public class CoreActivity extends Activity{
                 float y =   event.getY();
             //    Log.w("ImageView","X:" + x + "\nY:" + y + "\nWidth:" + previewWidth + "\nHeight:" + previewHeight);
                 int col = getColorBitmap(x,y,v);
+
                 label.setText("Color: " + getColor(col));
                 return true;
             }
@@ -133,13 +132,13 @@ public class CoreActivity extends Activity{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                if(isChecked){
                    checked = true;
-                   toggleButton.setText("White");
-                   toggleButton.setTextOn("White");
+                   toggleButton.setText("Black");
+                   toggleButton.setTextOn("Black");
                    changeImage();
                } else{
                    checked = false;
-                   toggleButton.setText("Black");
-                   toggleButton.setTextOff("Black");
+                   toggleButton.setText("White");
+                   toggleButton.setTextOff("White");
                    changeImage();
                }
             }
@@ -216,9 +215,12 @@ public class CoreActivity extends Activity{
         }
     }
 
+
+
+
     private void changeImage(){
         String colors2Change = boxesChecked();
-        if(!checked && (toggleButton.getText().equals("Black"))) {
+        if(!checked && (toggleButton.getText().equals("White"))) {
             int[] nRGB = new int[rgbInt.length];
             for (int i = 0; i < rgbInt.length; i++) {
                 if (colors2Change.contains(getColor((int) rgbInt[i])))
@@ -331,14 +333,11 @@ public class CoreActivity extends Activity{
         return true;
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
         int id = item.getItemId();
         Context context = getApplicationContext();
         CharSequence text = "The image was saved in your photos";
@@ -353,9 +352,6 @@ public class CoreActivity extends Activity{
             finish();
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
-
     }
 }

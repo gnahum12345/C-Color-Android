@@ -5,9 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -126,6 +132,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        Button test1 = (Button) findViewById(R.id.test1);
+        Button test2 = (Button) findViewById(R.id.test2);
+        Button test3 = (Button) findViewById(R.id.test3);
+        Button test4 = (Button) findViewById(R.id.test4);
+
         surfaceHolder = surfaceView.getHolder();
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -158,8 +169,81 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             }
         });
 
+        test1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switchActivity(R.mipmap.blue_green);
+            }
+        });
+        test2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchActivity(R.mipmap.e);
+            }
+        });
+        test3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchActivity(R.mipmap.green_red);
+            }
+        });
+        test4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchActivity(R.mipmap.red_green);
+            }
+        });
+
+
     }
 
+    private void switchActivity(int test){
+        if(flashlight)
+            flashLightOff();
+        Intent intent = new Intent(MainActivity.this, CoreActivity.class);
+        int width = 0;
+        int height = 0;
+
+        try{
+            //write File
+            Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    test);
+            width = bitmap.getWidth();
+            height = bitmap.getHeight();
+            bitmap = rotateBitmap(bitmap, 180, width, height);
+            String fileName = "bitmap.png";
+            FileOutputStream stream = this.openFileOutput(fileName, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+            //cleanUp
+            stream.close();
+            bitmap.recycle();
+            intent.putExtra("image",fileName);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        intent.putExtra("Width",width );
+        intent.putExtra("Height",height);
+        intent.putExtra("label", color);
+        intent.putExtra("arrayOfColors", colors);
+        //  Log.w("Switch", "before start");
+        startActivity(intent);
+    }
+
+    private static Bitmap rotateBitmap(Bitmap bitmap, float angle, int width, int height){
+        Matrix matrix = new Matrix();
+
+        matrix.postRotate(270);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,width,height,true);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
+
+        return rotatedBitmap;
+    }
 
     private void switchActivity(){
      //   Log.w("SwitchActivity", "Im here");
@@ -327,7 +411,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         if(landscape)
             camera.setDisplayOrientation(0);
         // modify parameter
-        param.setPreviewSize(352, 288);
+
+        surfaceView.getLayoutParams().width=param.getPreviewSize().width;
+        surfaceView.getLayoutParams().height=param.getPreviewSize().width;
+
         //param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
         int maxZoom = param.getMaxZoom();
         param.setZoom(maxZoom / 2);

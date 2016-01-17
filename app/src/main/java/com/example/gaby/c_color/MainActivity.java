@@ -581,7 +581,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 
 
-    @Override
+  /*  @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         landscape = true;
@@ -605,6 +605,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 flashLightOff();
         }
     }
+ */
 
 
     @Override

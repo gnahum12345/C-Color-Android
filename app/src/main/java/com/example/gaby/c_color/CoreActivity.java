@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.File;
 import java.io.FileInputStream;
 
 
@@ -46,7 +47,9 @@ public class CoreActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w("Picture", "at core");
         setContentView(R.layout.core_image);
+        Log.w("Picture","finished setting content view");
         ActionBar actionBar = getActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -60,14 +63,27 @@ public class CoreActivity extends Activity{
         label = (TextView) findViewById(R.id.label);
         color = getIntent().getStringExtra("label");
         colors = getIntent().getStringArrayExtra("arrayOfColors");
-        String filename = getIntent().getStringExtra("image");
+        boolean fileExists = getIntent().hasExtra("Picture");
+        Log.w("Picture", "fileName exists: " + fileExists);
+        String filename = getIntent().getStringExtra("Picture");
+        Log.w("Picture", "fileName" + filename);
         try {
             FileInputStream is = this.openFileInput(filename);
             bitmap = BitmapFactory.decodeStream(is);
             is.close();
+            /*if(filename.equals("bitmap.png")) {
+                FileInputStream is = this.openFileInput(filename);
+                bitmap = BitmapFactory.decodeStream(is);
+                is.close();
+            }else{
+                File image = new File(filename);
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.w("Picture","bitmap:" + bitmap);
 
         red = (CheckBox) findViewById(R.id.Red);
         brown = (CheckBox) findViewById(R.id.Brown);
@@ -83,7 +99,9 @@ public class CoreActivity extends Activity{
 
 
         rgbInt = new int[previewHeight*previewWidth];
-        Log.w("Activity", "PreviewWidth:" + previewWidth + "\npreviewHeight:" + previewHeight);
+        Log.w("Picture", "PreviewWidth:" + previewWidth + "\npreviewHeight:" + previewHeight);
+
+        bitmap = Bitmap.createScaledBitmap(bitmap,previewWidth,previewHeight,true);
         bitmap.getPixels(rgbInt, 0, previewWidth, 0, 0, previewWidth, previewHeight);
 
 
@@ -329,7 +347,7 @@ public class CoreActivity extends Activity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.flashlight).setVisible(false);
+        menu.setGroupVisible(R.id.main,false);
         return true;
     }
 

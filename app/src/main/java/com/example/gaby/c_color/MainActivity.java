@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,8 +16,10 @@ import android.graphics.YuvImage;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +27,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
@@ -112,7 +116,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                         "Yellow","Yellow","Yellow","Yellow","Yellow","Gray","Gray","Gray"};
 
 // number of pixels//transforms NV21 pixel data into RGB pixels
-
+    String imgDecodableString;
     byte[] rgbdata;
     int[] rgb;
     long midColor;
@@ -123,6 +127,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     boolean flashlight = false;
     boolean landscape = false;
     int currZoom;
+    final private int RESULT_LOAD_IMG = 1;
     Camera.PictureCallback rawCallback;
     Camera.ShutterCallback shutterCallback;
     Camera.PictureCallback jpegCallback;
@@ -211,7 +216,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                     test);
             width = bitmap.getWidth();
             height = bitmap.getHeight();
-            bitmap = rotateBitmap(bitmap, 180, width, height);
+            bitmap = rotateBitmap(bitmap, 270, width, height);
             String fileName = "bitmap.png";
             FileOutputStream stream = this.openFileOutput(fileName, Context.MODE_PRIVATE);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -219,7 +224,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             //cleanUp
             stream.close();
             bitmap.recycle();
-            intent.putExtra("image",fileName);
+            intent.putExtra("Picture",fileName);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -233,10 +238,49 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         startActivity(intent);
     }
 
+    private void switchActivity(Bitmap bitmap,String fileName){
+        Log.w("Picture","At switchActivity");
+        Log.w("Picture","Bitmap:" + bitmap.describeContents());
+        if(flashlight)
+            flashLightOff();
+        Log.w("Picture","About to create Intent");
+        Intent intent = new Intent(MainActivity.this, CoreActivity.class);
+        Log.w("Picture","created Intent");
+        int width = 0;
+        int height = 0;
+
+        Log.w("Picture", "about to go into try");
+        try{
+            width = bitmap.getWidth();
+            height = bitmap.getHeight();
+            bitmap = rotateBitmap(bitmap,270,bitmap.getWidth(),bitmap.getHeight());
+            String file = "bitmap.png";
+            FileOutputStream stream = this.openFileOutput(file, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+            //cleanUp
+            stream.close();
+            bitmap.recycle();
+            intent.putExtra("Picture",file);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+      //  Log.w("Picture", "finished closing fileoutputstream and bitmap is recycle");
+      //  Log.w("Picture", "file path: " + fileName );
+       // Log.w("Picture","out of try");
+        intent.putExtra("Width",width );
+        intent.putExtra("Height",height);
+        intent.putExtra("label", color);
+        intent.putExtra("arrayOfColors", colors);
+        //Log.w("Picture", "before start");
+        startActivity(intent);
+    }
+
     private static Bitmap rotateBitmap(Bitmap bitmap, float angle, int width, int height){
         Matrix matrix = new Matrix();
 
-        matrix.postRotate(270);
+        matrix.postRotate(angle);
 
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,width,height,true);
 
@@ -265,7 +309,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             //cleanUp
             stream.close();
             bitmap.recycle();
-            intent.putExtra("image", fileName);
+            intent.putExtra("Picture", fileName);
         }catch(Exception e) {
             e.printStackTrace();
         }
@@ -612,7 +656,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.save).setVisible(false);
+        menu.setGroupVisible(R.id.core,false);
         return true;
     }
 
@@ -641,9 +685,42 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 toast.show();
                 flashLightOff();
             }
-        }
+        }else if(id == R.id.open){
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Log.w("Picture","Is about to select image");
+            startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
 
+        }
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.w("Picture", "In activity Result");
+        boolean isData = (data != null);
+        Log.w("Picture", "RequestedCode:" + requestCode + "\nresultCode:" + resultCode + "\nRESULT_LOAD_IMG:"+RESULT_LOAD_IMG + "\nData:" + isData);
+
+        try {
+            if (requestCode == RESULT_LOAD_IMG && data != null) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imgDecodableString = cursor.getString(columnIndex);
+                Log.w("Picture", "String of image:" + imgDecodableString);
+                cursor.close();
+                Log.w("Picture", "going to switchActivity");
+                Bitmap bitmap = BitmapFactory.decodeFile(imgDecodableString);
+                switchActivity(bitmap,imgDecodableString);
+            } else {
+                Toast.makeText(this, "You haven't picked an Image", Toast.LENGTH_LONG).show();
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

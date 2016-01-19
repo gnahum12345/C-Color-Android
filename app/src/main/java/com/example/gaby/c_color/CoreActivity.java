@@ -47,9 +47,9 @@ public class CoreActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.w("Picture", "at core");
         setContentView(R.layout.core_image);
-        Log.w("Picture","finished setting content view");
+      //  Log.w("Picture", "at core");
+    //    Log.w("Picture","finished setting content view");
         ActionBar actionBar = getActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -64,9 +64,9 @@ public class CoreActivity extends Activity{
         color = getIntent().getStringExtra("label");
         colors = getIntent().getStringArrayExtra("arrayOfColors");
         boolean fileExists = getIntent().hasExtra("Picture");
-        Log.w("Picture", "fileName exists: " + fileExists);
+        //Log.w("Picture", "fileName exists: " + fileExists);
         String filename = getIntent().getStringExtra("Picture");
-        Log.w("Picture", "fileName" + filename);
+       // Log.w("Picture", "fileName" + filename);
         try {
             FileInputStream is = this.openFileInput(filename);
             bitmap = BitmapFactory.decodeStream(is);
@@ -83,7 +83,7 @@ public class CoreActivity extends Activity{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.w("Picture","bitmap:" + bitmap);
+ //       Log.w("Picture","bitmap:" + bitmap);
 
         red = (CheckBox) findViewById(R.id.Red);
         brown = (CheckBox) findViewById(R.id.Brown);
@@ -99,7 +99,7 @@ public class CoreActivity extends Activity{
 
 
         rgbInt = new int[previewHeight*previewWidth];
-        Log.w("Picture", "PreviewWidth:" + previewWidth + "\npreviewHeight:" + previewHeight);
+   //     Log.w("Picture", "PreviewWidth:" + previewWidth + "\npreviewHeight:" + previewHeight);
 
         bitmap = Bitmap.createScaledBitmap(bitmap,previewWidth,previewHeight,true);
         bitmap.getPixels(rgbInt, 0, previewWidth, 0, 0, previewWidth, previewHeight);

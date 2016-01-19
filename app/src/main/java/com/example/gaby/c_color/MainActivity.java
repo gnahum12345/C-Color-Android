@@ -239,17 +239,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     }
 
     private void switchActivity(Bitmap bitmap,String fileName){
-        Log.w("Picture","At switchActivity");
-        Log.w("Picture","Bitmap:" + bitmap.describeContents());
+      //  Log.w("Picture","At switchActivity");
+     //   Log.w("Picture","Bitmap:" + bitmap.describeContents());
+
         if(flashlight)
             flashLightOff();
-        Log.w("Picture","About to create Intent");
+       // Log.w("Picture","About to create Intent");
         Intent intent = new Intent(MainActivity.this, CoreActivity.class);
-        Log.w("Picture","created Intent");
+       // Log.w("Picture","created Intent");
         int width = 0;
         int height = 0;
 
-        Log.w("Picture", "about to go into try");
+     //   Log.w("Picture", "about to go into try");
         try{
             width = bitmap.getWidth();
             height = bitmap.getHeight();
@@ -569,18 +570,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         if(flashlight){
             flashLightOff();
         }
-        try
-        {
-            // release the camera immediately on pause event
-            //releaseCamera();
+        try {
             camera.stopPreview();
             camera.setPreviewCallback(null);
-
-        }
-        catch(Exception e)
+        }catch(Exception e)
         {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -687,7 +684,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             }
         }else if(id == R.id.open){
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            Log.w("Picture","Is about to select image");
+            //Log.w("Picture","Is about to select image");
             startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
 
         }
@@ -697,9 +694,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-        Log.w("Picture", "In activity Result");
+       // Log.w("Picture", "In activity Result");
         boolean isData = (data != null);
-        Log.w("Picture", "RequestedCode:" + requestCode + "\nresultCode:" + resultCode + "\nRESULT_LOAD_IMG:"+RESULT_LOAD_IMG + "\nData:" + isData);
+      //  Log.w("Picture", "RequestedCode:" + requestCode + "\nresultCode:" + resultCode + "\nRESULT_LOAD_IMG:"+RESULT_LOAD_IMG + "\nData:" + isData);
 
         try {
             if (requestCode == RESULT_LOAD_IMG && data != null) {
@@ -709,9 +706,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgDecodableString = cursor.getString(columnIndex);
-                Log.w("Picture", "String of image:" + imgDecodableString);
+         //       Log.w("Picture", "String of image:" + imgDecodableString);
                 cursor.close();
-                Log.w("Picture", "going to switchActivity");
+           //     Log.w("Picture", "going to switchActivity");
                 Bitmap bitmap = BitmapFactory.decodeFile(imgDecodableString);
                 switchActivity(bitmap,imgDecodableString);
             } else {
@@ -722,5 +719,6 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
             e.printStackTrace();
         }
     }
+
 
 }
